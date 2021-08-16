@@ -1,31 +1,52 @@
-N = int(input())
+from collections import deque
+import sys
+input = sys.stdin.readline
+n = int(input())
 arr = []
-for i in range(N):
+for i in range(n):
     li = list(map(int, input().split()))
-    arr.append(li)
     if 9 in li:
-        loc = (i, li.index(9)) # x(row),y(col)
+        sx,sy = i, li.index(9)
+        li[sy] = 0
+    arr.append(li)
 
-dir_x = [0,0,-1,1]
-dir_y = [-1,1,0,0]
+# print(arr, sx,sy)
 
-score = 2
-visited = [loc]
-queue = [loc]
-li=[]
-while queue:
-    while True:
-        # time += 1
-        loc = queue.pop(0)
+dx = [-1,1,0,0]
+dy = [0,0,-1,1]
+
+size = 2
+move_num = 0
+eat = 0
+while True:
+    q = deque()
+    flag = 1e9
+    q.append((sx,sy,0))
+    visited = [[False]*n for _ in range(n)]
+    fish = []
+    while q:
+        x,y,count = q.popleft()
+        if flag < count: break
         for i in range(4):
-            nx,ny = loc[0]+dir_x[i], loc[1]+dir_y[i]
-            if 0<= nx < N and 0<= ny < N and (nx,ny) not in visited and arr[nx][ny] <=2:
-                if arr[nx][ny] == 1:
-                    li.append((nx,ny))
-                queue.append((nx,ny))
-                visited.append((nx,ny))
-        if li:
-            li.sort()
-            loc = li[0]
-            break
-
+            nx,ny = x+dx[i], y+dy[i]
+            if nx<0 or ny<0 or nx>=n or ny>=n:
+                continue
+            if arr[nx][ny]>size or visited[nx][ny]:
+                continue
+            if arr[nx][ny]!=0 and arr[nx][ny] < size:
+                fish.append((nx,ny,count+1))
+                flag = count
+            q.append((nx,ny,count+1))
+            visited[nx][ny] = True
+    if fish:
+        fish.sort()
+        x,y,move = fish[0]
+        arr[x][y] = 0
+        move_num += move
+        eat += 1
+        if eat == size:
+            size+=1
+            eat = 0
+        sx,sy = x,y
+    else: break
+print(move_num)
