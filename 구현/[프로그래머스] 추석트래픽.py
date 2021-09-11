@@ -10,32 +10,20 @@ def solution(lines):
         li.append((start, end))
     count_li = []
     for n in range(len(lines)):
-        count = 1
-        s_start, end = li.pop(0)
-        s_end = round(s_start + 1 - 0.001, 3)
-        for i, (c_start, c_end) in enumerate(li):
-            if c_start <= s_start and s_end <= c_end:
-                count += 1
-            elif c_start >= s_start  and s_end >= c_end:
-                count += 1
-            elif c_start <= s_start <= c_end and s_start <= c_end:
-                count += 1
-            elif c_start <= s_end <= c_end and s_start <= c_start:
-                count += 1
-        count_li.append(count)
-        count = 1
-        s_start = end
-        s_end = round(s_start + 1 - 0.001, 3)
-        for i, (c_start, c_end) in enumerate(li):
-            if c_start <= s_start and s_end <= c_end:
-                count += 1
-            elif c_start >= s_start  and s_end >= c_end:
-                count += 1
-            elif c_start <= s_start <= c_end and s_start <= c_end:
-                count += 1
-            elif c_start <= s_end <= c_end and s_start <= c_start:
-                count += 1
-        count_li.append(count)
+        s_li = li.pop(0)
+        for s_start in s_li:
+            count = 1
+            s_end = round(s_start + 1 - 0.001, 3)
+            for i, (c_start, c_end) in enumerate(li):
+                if c_start <= s_start and s_end <= c_end:
+                    count += 1
+                elif c_start >= s_start  and s_end >= c_end:
+                    count += 1
+                elif c_start <= s_start <= c_end and s_start <= c_end:
+                    count += 1
+                elif c_start <= s_end <= c_end and s_start <= c_start:
+                    count += 1
+            count_li.append(count)
     return max(count_li)
 
 lines = [
