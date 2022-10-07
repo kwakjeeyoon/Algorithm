@@ -11,5 +11,3 @@ for w,v in li:
             continue
         if j-w > 0:
             dp[j] += dp[j-w]+dp[w]
-print(dp[k])
-
